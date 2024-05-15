@@ -1,7 +1,7 @@
 #include <iostream>
 
 template <typename T>
-class PriorityQueue {
+class PriorityQueueSLL {
     struct Node {
         T item;
         int priority;
@@ -14,9 +14,9 @@ class PriorityQueue {
     Node* head;
 
 public:
-    PriorityQueue() : head(nullptr) {}
+    PriorityQueueSLL() : head(nullptr) {}
 
-    ~PriorityQueue() {
+    ~PriorityQueueSLL() {
         while (head != nullptr) {
             Node* temp = head;
             head = head->next;

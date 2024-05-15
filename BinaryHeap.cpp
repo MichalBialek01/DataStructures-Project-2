@@ -2,7 +2,7 @@
 #include <stdexcept>
 
 template<typename T>
-class PriorityQueue {
+class PriorityQueueBH {
 private:
     std::pair<T, int>* heap;
     int capacity;
@@ -44,11 +44,11 @@ private:
     }
 
 public:
-    PriorityQueue() : capacity(10), size(0) {
+    PriorityQueueBH() : capacity(10), size(0) {
         heap = new std::pair<T, int>[capacity];
     }
 
-    ~PriorityQueue() {
+    ~PriorityQueueBH() {
         delete[] heap;
     }
 

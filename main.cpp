@@ -3,59 +3,171 @@
 #include <chrono>
 #include <random>
 #include "BinaryHeap.cpp"
+#include "RedBlackTree.cpp"
+#include "SortingList.cpp"
 
 using namespace std;
 
 
 template<typename T>
-void testPriorityQueue(int numberOfElements) {
-    PriorityQueue<T> pq;
+void testPriorityQueueBH(int numberOfElements) {
+    PriorityQueueBH<T> pq;
 
     // Inicjalizacja generatora liczb losowych
-    std::default_random_engine generator;
-    std::uniform_int_distribution<int> distribution(1, 1000000);
+    default_random_engine generator;
+    uniform_int_distribution<int> distribution(1, 1000000);
 
     // Pomiar czasu dla operacji insert
-    auto start = std::chrono::high_resolution_clock::now();
+    auto start = chrono::high_resolution_clock::now();
     for (int i = 0; i < numberOfElements; i++) {
         pq.insert(static_cast<T>(distribution(generator)), distribution(generator));
     }
-    auto stop = std::chrono::high_resolution_clock::now();
-    auto durationInsert = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-    std::cout << "Time for " << numberOfElements << " inserts: " << durationInsert.count() << " ms" << std::endl;
+    auto stop = chrono::high_resolution_clock::now();
+    auto durationInsert = chrono::duration_cast<chrono::milliseconds>(stop - start);
+    cout << "Time for " << numberOfElements << " inserts: " << durationInsert.count() << " ms" << endl;
 
     // Pomiar czasu dla operacji peek
-    start = std::chrono::high_resolution_clock::now();
+    start = chrono::high_resolution_clock::now();
     pq.peek();
-    stop = std::chrono::high_resolution_clock::now();
-    auto durationPeek = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-    std::cout << "Time for peek: " << durationPeek.count() << " ms" << std::endl;
+    stop = chrono::high_resolution_clock::now();
+    auto durationPeek = chrono::duration_cast<chrono::milliseconds>(stop - start);
+    cout << "Time for peek: " << durationPeek.count() << " ms" << endl;
 
     // Pomiar czasu dla operacji pop
-    start = std::chrono::high_resolution_clock::now();
+    start = chrono::high_resolution_clock::now();
     for (int i = 0; i < numberOfElements; i++) {
         pq.pop();
     }
-    stop = std::chrono::high_resolution_clock::now();
-    auto durationPop = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-    std::cout << "Time for " << numberOfElements << " pops: " << durationPop.count() << " ms" << std::endl;
+    stop = chrono::high_resolution_clock::now();
+    auto durationPop = chrono::duration_cast<chrono::milliseconds>(stop - start);
+    cout << "Time for " << numberOfElements << " pops: " << durationPop.count() << " ms" << endl;
+}
+
+template<typename T>
+void performTest(PriorityQueueRBT<T>& pq, int count) {
+    default_random_engine generator;
+    uniform_int_distribution<int> priorityDistribution(1, 1000000);
+    uniform_real_distribution<double> dataDistribution(1.0, 1000000.0);
+
+    cout << "Testing with " << count << " elements:" << endl;
+
+    // Insertion test
+    auto start = chrono::high_resolution_clock::now();
+    for (int i = 0; i < count; i++) {
+        T data = static_cast<T>(dataDistribution(generator));
+        int priority = priorityDistribution(generator);
+        pq.insert(data, priority);
+    }
+    auto stop = chrono::high_resolution_clock::now();
+    chrono::duration<double, milli> elapsed = stop - start;
+    cout << "Insert time: " << elapsed.count() << " ms\n";
+
+    // Peek test
+    start = chrono::high_resolution_clock::now();
+    pq.peek();
+    stop = chrono::high_resolution_clock::now();
+    elapsed = stop - start;
+    cout << "Peek time: " << elapsed.count() << " ms\n";
+
+    // Pop test
+    start = chrono::high_resolution_clock::now();
+    while (!pq.isEmpty()) {
+        pq.pop();
+    }
+    stop = chrono::high_resolution_clock::now();
+    elapsed = stop - start;
+    cout << "Pop time: " << elapsed.count() << " ms\n";
+}
+
+//SLL
+template<typename T>
+void performTest(PriorityQueueSLL<T>& pq, int count) {
+    default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
+    uniform_int_distribution<int> priorityDistribution(1, 1000000);
+    uniform_real_distribution<double> dataDistribution(1.0, 1000000.0);
+
+    cout << "Testing with " << count << " elements of type " << typeid(T).name() << ":" << endl;
+
+    // Insertion test
+    auto start = chrono::high_resolution_clock::now();
+    for (int i = 0; i < count; i++) {
+        T data = static_cast<T>(dataDistribution(generator));
+        int priority = priorityDistribution(generator);
+        pq.insert(data, priority);
+    }
+    auto stop = chrono::high_resolution_clock::now();
+    chrono::duration<double, milli> elapsed = stop - start;
+    cout << "Insert time: " << elapsed.count() << " ms\n";
+
+    // Peek test
+    start = chrono::high_resolution_clock::now();
+    try {
+        auto item = pq.peek();  // Tylko dla pomiaru czasu
+    } catch (const runtime_error& e) {
+        cout << "Peek error: " << e.what() << endl;
+    }
+    stop = chrono::high_resolution_clock::now();
+    elapsed = stop - start;
+    cout << "Peek time: " << elapsed.count() << " ms\n";
+
+    // Pop test
+    start = chrono::high_resolution_clock::now();
+    while (!pq.isEmpty()) {
+        try {
+            auto item = pq.pop();
+        } catch (const runtime_error& e) {
+            cout << "Pop error: " << e.what() << endl;
+            break;
+        }
+    }
+    stop = chrono::high_resolution_clock::now();
+    elapsed = stop - start;
+    cout << "Pop time: " << elapsed.count() << " ms\n";
 }
 
 int main() {
-    std::cout << "Testing int:" << std::endl;
-    testPriorityQueue<int>(1000);
-    testPriorityQueue<int>(10000);
-    testPriorityQueue<int>(100000);
+    vector<int> counts = {1000, 10000, 100000};
 
-    std::cout << "Testing float:" << std::endl;
-    testPriorityQueue<float>(1000);
-    testPriorityQueue<float>(10000);
-    testPriorityQueue<float>(100000);
+    //BH
+    for (int size : counts) {
+        cout << "Testing int:" << endl;
+        testPriorityQueueBH<int>(size);
 
-    std::cout << "Testing double:" << std::endl;
-    testPriorityQueue<double>(1000);
-    testPriorityQueue<double>(10000);
-    testPriorityQueue<double>(100000);
+        cout << "Testing float:" << endl;
+        testPriorityQueueBH<float>(size);
+
+        cout << "Testing double:" << endl;
+        testPriorityQueueBH<double>(size);
+    }
+
+    //RBT
+    PriorityQueueRBT<int> pqRBTInt;
+    PriorityQueueRBT<float> pqRBTFloat;
+    PriorityQueueRBT<double> pqRBTDouble;
+
+
+    for (int count : counts) {
+        cout << "Integers:\n";
+        performTest(pqRBTInt, count);
+        cout << "Floats:\n";
+        performTest(pqRBTFloat, count);
+        cout << "Doubles:\n";
+        performTest(pqRBTDouble, count);
+    }
+
+    ///SLL
+    PriorityQueueSLL<int> pqSLLInt;
+    PriorityQueueSLL<float> pqSLLFloat;
+    PriorityQueueSLL<double> pqSLLDouble;
+
+    for (int count : counts) {
+        cout << "Integers:\n";
+        performTest(pqSLLInt, count);
+        cout << "Floats:\n";
+        performTest(pqSLLFloat, count);
+        cout << "Doubles:\n";
+        performTest(pqSLLDouble, count);
+    }
 
 
 
@@ -65,63 +177,4 @@ int main() {
     return 0;
 
 
-
-
-
 }
-
-
-
-//
-//
-//    // Define array sizes
-//
-//    // Create a random device
-//    std::random_device rd;
-//    std::mt19937 gen(rd());
-//    std::uniform_int_distribution<> dis(1, 1000000);
-//
-//    for (int size : sizes) {
-//        PriorityQueue<int> pq;
-//        std::cout << "Testing with " << size << " elements:" << std::endl;
-//
-//        // Timing insert operation
-//        auto start = std::chrono::high_resolution_clock::now();
-//        for (int i = 0; i < size; ++i) {
-//            int random_priority = dis(gen);
-//            pq.insert(i, random_priority); // Insert elements with random priorities
-//        }
-//        auto end = std::chrono::high_resolution_clock::now();
-//        std::chrono::duration<double, std::milli> elapsed = end - start;
-//        std::cout << "Total time for " << size << " insert operations: " << elapsed.count() << " ms" << std::endl;
-//
-//        // Timing peek operation
-//        start = std::chrono::high_resolution_clock::now();
-//        try {
-//            int max = pq.peek();
-//            std::cout << "Maximum element: " << max << std::endl;
-//        } catch (std::runtime_error& e) {
-//            std::cout << "Error: " << e.what() << std::endl;
-//        }
-//        end = std::chrono::high_resolution_clock::now();
-//        elapsed = end - start;
-//        std::cout << "Time for peek operation: " << elapsed.count() << " ms" << std::endl;
-//
-//        // Timing pop operations until empty
-//        start = std::chrono::high_resolution_clock::now();
-//        try {
-//            while (!pq.isEmpty()) {
-//                pq.pop(); // Continuously remove elements
-//            }
-//        } catch (std::runtime_error& e) {
-//            std::cout << "Error: " << e.what() << std::endl;
-//        }
-//        end = std::chrono::high_resolution_clock::now();
-//        elapsed = end - start;
-//        std::cout << "Total time for popping all elements: " << elapsed.count() << " ms" << std::endl;
-//
-//        std::cout << std::endl;
-////    }
-//
-//    return 0;
-//}
