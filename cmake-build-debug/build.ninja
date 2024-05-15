@@ -73,6 +73,12 @@ build CMakeFiles/untitled2.dir/main.cpp.obj: CXX_COMPILER__untitled2_unscanned_D
   OBJECT_DIR = CMakeFiles\untitled2.dir
   OBJECT_FILE_DIR = CMakeFiles\untitled2.dir
 
+build CMakeFiles/untitled2.dir/Logger.cpp.obj: CXX_COMPILER__untitled2_unscanned_Debug C$:/Users/DELL/CLionProjects/DataStructures-Project-2/Logger.cpp || cmake_object_order_depends_target_untitled2
+  DEP_FILE = CMakeFiles\untitled2.dir\Logger.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\untitled2.dir
+  OBJECT_FILE_DIR = CMakeFiles\untitled2.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target untitled2
@@ -81,7 +87,7 @@ build CMakeFiles/untitled2.dir/main.cpp.obj: CXX_COMPILER__untitled2_unscanned_D
 #############################################
 # Link the executable untitled2.exe
 
-build untitled2.exe: CXX_EXECUTABLE_LINKER__untitled2_Debug CMakeFiles/untitled2.dir/RedBlackTree.cpp.obj CMakeFiles/untitled2.dir/BinaryHeap.cpp.obj CMakeFiles/untitled2.dir/SortingList.cpp.obj CMakeFiles/untitled2.dir/main.cpp.obj
+build untitled2.exe: CXX_EXECUTABLE_LINKER__untitled2_Debug CMakeFiles/untitled2.dir/RedBlackTree.cpp.obj CMakeFiles/untitled2.dir/BinaryHeap.cpp.obj CMakeFiles/untitled2.dir/SortingList.cpp.obj CMakeFiles/untitled2.dir/main.cpp.obj CMakeFiles/untitled2.dir/Logger.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\untitled2.dir

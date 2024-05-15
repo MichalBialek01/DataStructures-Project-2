@@ -6,4 +6,5 @@ set(CMAKE_CXX_STANDARD 17)
 add_executable(untitled2 "RedBlackTree.cpp"
         BinaryHeap.cpp
         SortingList.cpp
-        main.cpp)
+        main.cpp
+        Logger.cpp)
