@@ -18,29 +18,29 @@ template<typename T>
 void testPriorityQueueBH(Logger& logger, int numberOfElements) {
     PriorityQueueBH<T> pq;
 
-    auto start = std::chrono::high_resolution_clock::now();
+    auto start = chrono::high_resolution_clock::now();
     for (int i = 0; i < numberOfElements; i++) {
         pq.insert(static_cast<T>(i), i);
     }
-    auto stop = std::chrono::high_resolution_clock::now();
-    auto durationInsert = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start);
-    logger.log("BH,Insert," + std::to_string(numberOfElements) + "," + std::to_string(durationInsert.count()));
+    auto stop = chrono::high_resolution_clock::now();
+    auto durationInsert = chrono::duration_cast<chrono::nanoseconds>(stop - start);
+    logger.log("BH,Insert," + to_string(numberOfElements) + "," + to_string(durationInsert.count()));
 //    cout << "Insert time: " << elapsed.count() << " ns";
 
-    start = std::chrono::high_resolution_clock::now();
+    start = chrono::high_resolution_clock::now();
     pq.peek();
-    stop = std::chrono::high_resolution_clock::now();
-    auto durationPeek = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start);
-    logger.log("BH,Peek," + std::to_string(numberOfElements) + "," + std::to_string(durationPeek.count()));
+    stop = chrono::high_resolution_clock::now();
+    auto durationPeek = chrono::duration_cast<chrono::nanoseconds>(stop - start);
+    logger.log("BH,Peek," + to_string(numberOfElements) + "," + to_string(durationPeek.count()));
 //    cout << "Peek time: " << elapsed.count() << " ms\n";
 
-    start = std::chrono::high_resolution_clock::now();
+    start = chrono::high_resolution_clock::now();
     for (int i = 0; i < numberOfElements; i++) {
         pq.pop();
     }
-    stop = std::chrono::high_resolution_clock::now();
-    auto durationPop = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start);
-    logger.log("BH,Pop," + std::to_string(numberOfElements) + "," + std::to_string(durationPop.count()));
+    stop = chrono::high_resolution_clock::now();
+    auto durationPop = chrono::duration_cast<chrono::nanoseconds>(stop - start);
+    logger.log("BH,Pop," + to_string(numberOfElements) + "," + to_string(durationPop.count()));
     //    cout << "Pop time: " << elapsed.count() << " ms\n";
 
 }
@@ -58,16 +58,16 @@ void performTestRBT(PriorityQueueRBT<T>& pq, int numberOfElements,Logger& logger
         pq.insert(data, priority);
     }
     auto stop = chrono::high_resolution_clock::now();
-    auto durationInsert = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start);
-    logger.log("RBT,Insert," + std::to_string(numberOfElements) + "," + std::to_string(durationInsert.count()));
+    auto durationInsert = chrono::duration_cast<chrono::nanoseconds>(stop - start);
+    logger.log("RBT,Insert," + to_string(numberOfElements) + "," + to_string(durationInsert.count()));
 //    cout << "Insert time: " << durationInsert.count() << " ms\n";
 
     // Peek test
     start = chrono::high_resolution_clock::now();
     pq.peek();
     stop = chrono::high_resolution_clock::now();
-    auto durationPeek = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start);
-    logger.log("RBT,Peek," + std::to_string(numberOfElements) + "," + std::to_string(durationPeek.count()));
+    auto durationPeek = chrono::duration_cast<chrono::nanoseconds>(stop - start);
+    logger.log("RBT,Peek," + to_string(numberOfElements) + "," + to_string(durationPeek.count()));
 //    cout << "Peek time: " << durationPeek.count() << " ms\n";
 
     // Pop test
@@ -76,51 +76,51 @@ void performTestRBT(PriorityQueueRBT<T>& pq, int numberOfElements,Logger& logger
         pq.pop();
     }
     stop = chrono::high_resolution_clock::now();
-    auto durationPop = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start);
-    logger.log("RBT,Pop," + std::to_string(numberOfElements) + "," + std::to_string(durationPop.count()));
+    auto durationPop = chrono::duration_cast<chrono::nanoseconds>(stop - start);
+    logger.log("RBT,Pop," + to_string(numberOfElements) + "," + to_string(durationPop.count()));
     //    cout << "Pop time: " << durationPop.count() << " ms\n";
 }
 
 //SLL
 template<typename T>
 void performTestSLL(PriorityQueueSLL<T>& pq, int count,Logger&  logger) {
-    logger.log("Testing with " + std::to_string(count) + " elements of type " + typeid(T).name() + ":");
+    logger.log("Testing with " + to_string(count) + " elements of type " + typeid(T).name() + ":");
 
     // Insertion test
-    auto start = std::chrono::high_resolution_clock::now();
+    auto start = chrono::high_resolution_clock::now();
     for (int i = 0; i < count; i++) {
         T data = static_cast<T>(1 + i * 0.1);  // Simple data generation
         int priority = i + 1;                 // Sequential priorities
         pq.insert(data, priority);
     }
-    auto stop = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::milli> elapsed = stop - start;
-    logger.log("Insert time: " + std::to_string(elapsed.count()) + " ms");
+    auto stop = chrono::high_resolution_clock::now();
+    chrono::duration<double, milli> elapsed = stop - start;
+    logger.log("Insert time: " + to_string(elapsed.count()) + " ms");
 
     // Peek test
-    start = std::chrono::high_resolution_clock::now();
+    start = chrono::high_resolution_clock::now();
     try {
         auto item = pq.peek();  // Just for time measurement
-    } catch (const std::runtime_error& e) {
-        logger.log("Peek error: " + std::string(e.what()));
+    } catch (const runtime_error& e) {
+        logger.log("Peek error: " + string(e.what()));
     }
-    stop = std::chrono::high_resolution_clock::now();
+    stop = chrono::high_resolution_clock::now();
     elapsed = stop - start;
-    logger.log("Peek time: " + std::to_string(elapsed.count()) + " ms");
+    logger.log("Peek time: " + to_string(elapsed.count()) + " ms");
 
     // Pop test
-    start = std::chrono::high_resolution_clock::now();
+    start = chrono::high_resolution_clock::now();
     while (!pq.isEmpty()) {
         try {
             auto item = pq.pop();
-        } catch (const std::runtime_error& e) {
-            logger.log("Pop error: " + std::string(e.what()));
+        } catch (const runtime_error& e) {
+            logger.log("Pop error: " + string(e.what()));
             break;
         }
     }
-    stop = std::chrono::high_resolution_clock::now();
+    stop = chrono::high_resolution_clock::now();
     elapsed = stop - start;
-    logger.log("Pop time: " + std::to_string(elapsed.count()) + " ms");
+    logger.log("Pop time: " + to_string(elapsed.count()) + " ms");
 }
 
 
@@ -140,10 +140,10 @@ int main() {
 
     //RBT
     cout<<"Testing RedBlackTree priorityQueue"<<endl;
-    cout<<"Testing BinaryHeap"<<endl;
     PriorityQueueRBT<int> pqRBTInt;
     PriorityQueueRBT<float> pqRBTFloat;
     PriorityQueueRBT<double> pqRBTDouble;
+
 
 
     for (int count : counts) {
@@ -154,20 +154,19 @@ int main() {
         cout << "Doubles:\n";
         performTestRBT(pqRBTDouble, count,logger);
     }
+    cout<<"Testing RedBlackTree priorityQueue finished"<<endl;
 
     ///SLL
-    cout<<"Testing SingleLinkedList priorityQueue"<<endl;
+    cout<<"Testing SingleLinkedList SingleLinkedList"<<endl;
     PriorityQueueSLL<int> pqSLLInt;
     PriorityQueueSLL<float> pqSLLFloat;
     PriorityQueueSLL<double> pqSLLDouble;
 
     for (int count : counts) {
-        cout << "Integers:\n";
         performTestSLL(pqSLLInt, count,logger);
-        cout << "Floats:\n";
         performTestSLL(pqSLLFloat, count,logger);
-        cout << "Doubles:\n";
         performTestSLL(pqSLLDouble, count,logger);
     }
+    cout<<"Testing SingleLinkedList SingleLinkedList finished"<<endl;
     return 0;
 }
