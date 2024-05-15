@@ -101,20 +101,3 @@ public:
         }
     }
 };
-
-int main() {
-    PriorityQueue<std::string> queue;
-    queue.insert("task1", 3);
-    queue.insert("task2", 2);
-    queue.insert("task3", 1);
-    queue.insert("task4", 4);
-
-    std::cout << "Peek: " << queue.peek() << std::endl;
-    std::cout << "Pop: " << queue.pop() << std::endl;
-    std::cout << "After pop, Peek: " << queue.peek() << std::endl;
-
-    queue.deleteElement("task2", 2);
-    std::cout << "After deleting task2, Peek: " << queue.peek() << std::endl;
-
-    return 0;
-}

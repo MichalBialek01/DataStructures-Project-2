@@ -88,24 +88,3 @@ public:
         }
     }
 };
-
-int main() {
-    PriorityQueue<std::string> pq;
-
-    pq.insert("low", 1);
-    pq.insert("medium", 5);
-    pq.insert("high", 10);
-
-    std::cout << "Peek: " << pq.peek() << std::endl; // Should output 'high'
-    pq.deleteItem();
-    std::cout << "New Peek: " << pq.peek() << std::endl; // Should output 'medium'
-
-    pq.deleteItem("medium", 5);
-    std::cout << "Peek after deleting 'medium': " << pq.peek() << std::endl; // Should output 'low'
-
-    while (!pq.isEmpty()) {
-        std::cout << "Pop: " << pq.pop() << std::endl;
-    }
-
-    return 0;
-}

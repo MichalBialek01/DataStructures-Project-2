@@ -1,25 +1,30 @@
 #include <iostream>
 #include <stdexcept>
+#include <chrono>
 
-enum Color { RED, BLACK };
 
-template <typename T>
+enum Color {
+    RED, BLACK
+};
+
+template<typename T>
 struct Node {
     T data;
     int priority;
     Color color;
     Node *left, *right, *parent;
 
-    Node(T data, int priority) : data(data), priority(priority), color(RED), left(nullptr), right(nullptr), parent(nullptr) {}
+    Node(T data, int priority) : data(data), priority(priority), color(RED), left(nullptr), right(nullptr),
+                                 parent(nullptr) {}
 };
 
-template <typename T>
+template<typename T>
 class RedBlackTree {
 private:
-    Node<T>* root;
+    Node<T> *root;
 
-    void rotateLeft(Node<T>*& root, Node<T>*& x) {
-        Node<T>* y = x->right;
+    void rotateLeft(Node<T> *&root, Node<T> *&x) {
+        Node<T> *y = x->right;
         x->right = y->left;
         if (x->right != nullptr)
             x->right->parent = x;
@@ -34,8 +39,8 @@ private:
         x->parent = y;
     }
 
-    void rotateRight(Node<T>*& root, Node<T>*& x) {
-        Node<T>* y = x->left;
+    void rotateRight(Node<T> *&root, Node<T> *&x) {
+        Node<T> *y = x->left;
         x->left = y->right;
         if (x->left != nullptr)
             x->left->parent = x;
@@ -50,8 +55,8 @@ private:
         x->parent = y;
     }
 
-    void fixInsert(Node<T>*& root, Node<T>*& k) {
-        Node<T>* u;
+    void fixInsert(Node<T> *&root, Node<T> *&k) {
+        Node<T> *u;
         while (k->parent != nullptr && k->parent->color == RED) {
             if (k->parent == k->parent->parent->right) {
                 u = k->parent->parent->left;
@@ -91,7 +96,7 @@ private:
         root->color = BLACK;
     }
 
-    void rbTransplant(Node<T>* u, Node<T>* v) {
+    void rbTransplant(Node<T> *u, Node<T> *v) {
         if (u->parent == nullptr) {
             root = v;
         } else if (u == u->parent->left) {
@@ -104,8 +109,8 @@ private:
         }
     }
 
-    void fixDelete(Node<T>* x) {
-        Node<T>* s;
+    void fixDelete(Node<T> *x) {
+        Node<T> *s;
         while (x != root && (x == nullptr || x->color == BLACK)) {
             if (x == x->parent->left) {
                 s = x->parent->right;
@@ -115,7 +120,8 @@ private:
                     rotateLeft(root, x->parent);
                     s = x->parent->right;
                 }
-                if ((s->left == nullptr || s->left->color == BLACK) && (s->right == nullptr || s->right->color == BLACK)) {
+                if ((s->left == nullptr || s->left->color == BLACK) &&
+                    (s->right == nullptr || s->right->color == BLACK)) {
                     s->color = RED;
                     x = x->parent;
                 } else {
@@ -139,7 +145,8 @@ private:
                     rotateRight(root, x->parent);
                     s = x->parent->left;
                 }
-                if ((s->right == nullptr || s->right->color == BLACK) && (s->left == nullptr || s->left->color == BLACK)) {
+                if ((s->right == nullptr || s->right->color == BLACK) &&
+                    (s->left == nullptr || s->left->color == BLACK)) {
                     s->color = RED;
                     x = x->parent;
                 } else {
@@ -160,7 +167,7 @@ private:
         if (x != nullptr) x->color = BLACK;
     }
 
-    Node<T>* minimum(Node<T>* node) {
+    Node<T> *minimum(Node<T> *node) {
         while (node->left != nullptr)
             node = node->left;
         return node;
@@ -169,10 +176,10 @@ private:
 public:
     RedBlackTree() : root(nullptr) {}
 
-    void insert(const T& data, int priority) {
-        Node<T>* node = new Node<T>(data, priority);
-        Node<T>* y = nullptr;
-        Node<T>* x = this->root;
+    void insert(const T &data, int priority) {
+        Node<T> *node = new Node<T>(data, priority);
+        Node<T> *y = nullptr;
+        Node<T> *x = this->root;
 
         while (x != nullptr) {
             y = x;
@@ -201,9 +208,9 @@ public:
         fixInsert(root, node);
     }
 
-    void deleteNode(Node<T>* node, int priority) {
-        Node<T>* z = root;
-        Node<T>* x, *y;
+    void deleteNode(Node<T> *node, int priority) {
+        Node<T> *z = root;
+        Node<T> *x, *y;
 
         while (z != nullptr) {
             if (z->priority == priority) {
@@ -251,7 +258,7 @@ public:
         }
     }
 
-    Node<T>* getRoot() {
+    Node<T> *getRoot() {
         return root;
     }
 
@@ -259,30 +266,38 @@ public:
         return root == nullptr;
     }
 
-    Node<T>* maximum(Node<T>* node) {
+    Node<T> *maximum(Node<T> *node) {
         while (node->right != nullptr)
             node = node->right;
         return node;
     }
 };
 
-template <typename T>
+template<typename T>
 class PriorityQueue {
 private:
     RedBlackTree<T> tree;
 
 public:
-    void insert(const T& item, int priority) {
+    void insert(const T &item, int priority) {
+        auto start = std::chrono::high_resolution_clock::now();
         tree.insert(item, priority);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> elapsed = end - start;
+        std::cout << "Insert operation took " << elapsed.count() << " milliseconds.\n";
     }
 
     T pop() {
         if (tree.isEmpty()) {
             throw std::runtime_error("Priority queue is empty");
         }
-        Node<T>* maxNode = tree.maximum(tree.getRoot());
+        auto start = std::chrono::high_resolution_clock::now();
+        Node<T> *maxNode = tree.maximum(tree.getRoot());
         T item = maxNode->data;
         tree.deleteNode(maxNode, maxNode->priority);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> elapsed = end - start;
+        std::cout << "Pop operation took " << elapsed.count() << " milliseconds.\n";
         return item;
     }
 
@@ -290,36 +305,57 @@ public:
         if (tree.isEmpty()) {
             throw std::runtime_error("Priority queue is empty");
         }
-        Node<T>* maxNode = tree.maximum(tree.getRoot());
+        auto start = std::chrono::high_resolution_clock::now();
+        Node<T> *maxNode = tree.maximum(tree.getRoot());
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> elapsed = end - start;
+        std::cout << "Peek operation took " << elapsed.count() << " milliseconds.\n";
         return maxNode->data;
     }
 
-    bool isEmpty() {
-        return tree.isEmpty();
-    }
+    void remove(const T &item, int priority) {
+        auto start = std::chrono::high_resolution_clock::now();
 
-    void remove(const T& item, int priority) {
-        // Search and remove item with specific priority (to be implemented fully)
+        Node<T> *node = tree.getRoot();
+        Node<T> *nodeToDelete = nullptr;
+
+        // Search for the node with the specified data and priority
+        while (node != nullptr) {
+            if (node->priority == priority && node->data == item) {
+                nodeToDelete = node;
+                break;
+            } else if (priority < node->priority) {
+                node = node->left;
+            } else {
+                node = node->right;
+            }
+        }
+
+        if (nodeToDelete == nullptr) {
+            std::cout << "Element with data '" << item << "' and priority " << priority << " not found.\n";
+            return; // Element not found
+        }
+
+        // If the node is found, delete it using RedBlackTree's deletion function
+        tree.deleteNode(nodeToDelete, priority);
+
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> elapsed = end - start;
+        std::cout << "Remove operation took " << elapsed.count() << " milliseconds.\n";
     }
 
     void remove() {
+        auto start = std::chrono::high_resolution_clock::now();
         if (tree.isEmpty()) {
             throw std::runtime_error("Priority queue is empty");
         }
-        Node<T>* maxNode = tree.maximum(tree.getRoot());
+        Node<T> *maxNode = tree.maximum(tree.getRoot());
         tree.deleteNode(maxNode, maxNode->priority);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> elapsed = end - start;
+        std::cout << "Remove operation took " << elapsed.count() << " milliseconds.\n";
+    }
+    bool isEmpty() const {
+        return tree.isEmpty();
     }
 };
-
-int main() {
-    PriorityQueue<std::string> pq;
-    pq.insert("hello", 5);
-    pq.insert("world", 2);
-    pq.insert("!", 10);
-
-    std::cout << "Peek: " << pq.peek() << std::endl; // Outputs: !
-    std::cout << "Pop: " << pq.pop() << std::endl;  // Outputs: !
-    std::cout << "Peek now: " << pq.peek() << std::endl;  // Outputs: hello
-
-    return 0;
-}
