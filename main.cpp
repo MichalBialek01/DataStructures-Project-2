@@ -13,49 +13,42 @@ template<typename T>
 void testPriorityQueueBH(int numberOfElements) {
     PriorityQueueBH<T> pq;
 
-    // Inicjalizacja generatora liczb losowych
-    default_random_engine generator;
-    uniform_int_distribution<int> distribution(1, 1000000);
-
     // Pomiar czasu dla operacji insert
-    auto start = chrono::high_resolution_clock::now();
+    auto start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < numberOfElements; i++) {
-        pq.insert(static_cast<T>(distribution(generator)), distribution(generator));
+        pq.insert(static_cast<T>(i), i);  // Używanie sekwencyjnych wartości zamiast losowych
     }
-    auto stop = chrono::high_resolution_clock::now();
-    auto durationInsert = chrono::duration_cast<chrono::milliseconds>(stop - start);
-    cout << "Time for " << numberOfElements << " inserts: " << durationInsert.count() << " ms" << endl;
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto durationInsert = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    std::cout << "Time for " << numberOfElements << " inserts: " << durationInsert.count() << " ms" << std::endl;
 
     // Pomiar czasu dla operacji peek
-    start = chrono::high_resolution_clock::now();
+    start = std::chrono::high_resolution_clock::now();
     pq.peek();
-    stop = chrono::high_resolution_clock::now();
-    auto durationPeek = chrono::duration_cast<chrono::milliseconds>(stop - start);
-    cout << "Time for peek: " << durationPeek.count() << " ms" << endl;
+    stop = std::chrono::high_resolution_clock::now();
+    auto durationPeek = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    std::cout << "Time for peek: " << durationPeek.count() << " ms" << std::endl;
 
     // Pomiar czasu dla operacji pop
-    start = chrono::high_resolution_clock::now();
+    start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < numberOfElements; i++) {
         pq.pop();
     }
-    stop = chrono::high_resolution_clock::now();
-    auto durationPop = chrono::duration_cast<chrono::milliseconds>(stop - start);
-    cout << "Time for " << numberOfElements << " pops: " << durationPop.count() << " ms" << endl;
+    stop = std::chrono::high_resolution_clock::now();
+    auto durationPop = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    std::cout << "Time for " << numberOfElements << " pops: " << durationPop.count() << " ms" << std::endl;
 }
 
-template<typename T>
-void performTest(PriorityQueueRBT<T>& pq, int count) {
-    default_random_engine generator;
-    uniform_int_distribution<int> priorityDistribution(1, 1000000);
-    uniform_real_distribution<double> dataDistribution(1.0, 1000000.0);
 
+template<typename T>
+void performTestRBT(PriorityQueueRBT<T>& pq, int count) {
     cout << "Testing with " << count << " elements:" << endl;
 
     // Insertion test
     auto start = chrono::high_resolution_clock::now();
     for (int i = 0; i < count; i++) {
-        T data = static_cast<T>(dataDistribution(generator));
-        int priority = priorityDistribution(generator);
+        T data = static_cast<T>(i + 1);  // Sekwencyjne wartości zamiast losowych
+        int priority = i + 1;           // Sekwencyjne priorytety
         pq.insert(data, priority);
     }
     auto stop = chrono::high_resolution_clock::now();
@@ -81,18 +74,14 @@ void performTest(PriorityQueueRBT<T>& pq, int count) {
 
 //SLL
 template<typename T>
-void performTest(PriorityQueueSLL<T>& pq, int count) {
-    default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
-    uniform_int_distribution<int> priorityDistribution(1, 1000000);
-    uniform_real_distribution<double> dataDistribution(1.0, 1000000.0);
-
+void performTestSLL(PriorityQueueSLL<T>& pq, int count) {
     cout << "Testing with " << count << " elements of type " << typeid(T).name() << ":" << endl;
 
     // Insertion test
     auto start = chrono::high_resolution_clock::now();
     for (int i = 0; i < count; i++) {
-        T data = static_cast<T>(dataDistribution(generator));
-        int priority = priorityDistribution(generator);
+        T data = static_cast<T>(1 + i * 0.1);  // Proste generowanie danych
+        int priority = i + 1;                 // Sekwencyjne priorytety
         pq.insert(data, priority);
     }
     auto stop = chrono::high_resolution_clock::now();
@@ -129,18 +118,21 @@ int main() {
     vector<int> counts = {1000, 10000, 100000};
 
     //BH
+    cout<<"Testing BinaryHeap priorityQueue"<<endl;
     for (int size : counts) {
-        cout << "Testing int:" << endl;
+        cout << "Integers:\n";
         testPriorityQueueBH<int>(size);
 
-        cout << "Testing float:" << endl;
+        cout << "Floats:\n";
         testPriorityQueueBH<float>(size);
 
-        cout << "Testing double:" << endl;
+        cout << "Doubles:\n";
         testPriorityQueueBH<double>(size);
     }
 
     //RBT
+    cout<<"Testing RedBlackTree priorityQueue"<<endl;
+    cout<<"Testing BinaryHeap"<<endl;
     PriorityQueueRBT<int> pqRBTInt;
     PriorityQueueRBT<float> pqRBTFloat;
     PriorityQueueRBT<double> pqRBTDouble;
@@ -148,25 +140,26 @@ int main() {
 
     for (int count : counts) {
         cout << "Integers:\n";
-        performTest(pqRBTInt, count);
+        performTestRBT(pqRBTInt, count);
         cout << "Floats:\n";
-        performTest(pqRBTFloat, count);
+        performTestRBT(pqRBTFloat, count);
         cout << "Doubles:\n";
-        performTest(pqRBTDouble, count);
+        performTestRBT(pqRBTDouble, count);
     }
 
     ///SLL
+    cout<<"Testing SingleLinkedList priorityQueue"<<endl;
     PriorityQueueSLL<int> pqSLLInt;
     PriorityQueueSLL<float> pqSLLFloat;
     PriorityQueueSLL<double> pqSLLDouble;
 
     for (int count : counts) {
         cout << "Integers:\n";
-        performTest(pqSLLInt, count);
+        performTestSLL(pqSLLInt, count);
         cout << "Floats:\n";
-        performTest(pqSLLFloat, count);
+        performTestSLL(pqSLLFloat, count);
         cout << "Doubles:\n";
-        performTest(pqSLLDouble, count);
+        performTestSLL(pqSLLDouble, count);
     }
 
 
