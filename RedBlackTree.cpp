@@ -280,24 +280,16 @@
 
     public:
         void insert(const T &item, int priority) {
-            auto start = std::chrono::high_resolution_clock::now();
             tree.insert(item, priority);
-            auto end = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double, std::milli> elapsed = end - start;
-            std::cout << "Insert operation took " << elapsed.count() << " milliseconds.\n";
         }
 
         T pop() {
             if (tree.isEmpty()) {
                 throw std::runtime_error("Priority queue is empty");
             }
-            auto start = std::chrono::high_resolution_clock::now();
             Node<T> *maxNode = tree.maximum(tree.getRoot());
             T item = maxNode->data;
             tree.deleteNode(maxNode, maxNode->priority);
-            auto end = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double, std::milli> elapsed = end - start;
-            std::cout << "Pop operation took " << elapsed.count() << " milliseconds.\n";
             return item;
         }
 
@@ -305,11 +297,7 @@
             if (tree.isEmpty()) {
                 throw std::runtime_error("Priority queue is empty");
             }
-            auto start = std::chrono::high_resolution_clock::now();
             Node<T> *maxNode = tree.maximum(tree.getRoot());
-            auto end = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double, std::milli> elapsed = end - start;
-            std::cout << "Peek operation took " << elapsed.count() << " milliseconds.\n";
             return maxNode->data;
         }
 

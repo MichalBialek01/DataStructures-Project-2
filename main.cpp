@@ -18,6 +18,9 @@ template<typename T>
 void testPriorityQueueBH(Logger& logger, int numberOfElements) {
     PriorityQueueBH<T> pq;
 
+    cout << "Testing with " << numberOfElements << " elements:" << endl;
+
+
     auto start = chrono::high_resolution_clock::now();
     for (int i = 0; i < numberOfElements; i++) {
         pq.insert(static_cast<T>(i), i);
@@ -127,15 +130,15 @@ void performTestSLL(PriorityQueueSLL<T>& pq, int count,Logger&  logger) {
 int main() {
     Logger logger("performance_log.csv");
     vector<int> counts = {1000, 10000, 100000};
-
-    //BH
-    cout<<"Testing BinaryHeap priorityQueue"<<endl;
-    for (int size : counts) {
-        testPriorityQueueBH<int>(logger,size);
-        testPriorityQueueBH<float>(logger,size);
-        testPriorityQueueBH<double>(logger,size);
-    }
-    cout<<"Testing BinaryHeap priorityQueue finished"<<endl;
+//      Działa poprawnie
+//    //BH
+//    cout<<"Testing BinaryHeap priorityQueue"<<endl;
+//    for (int size : counts) {
+//        testPriorityQueueBH<int>(logger,size);
+//        testPriorityQueueBH<float>(logger,size);
+//        testPriorityQueueBH<double>(logger,size);
+//    }
+//    cout<<"Testing BinaryHeap priorityQueue finished"<<endl;
 
 
     //RBT
@@ -147,26 +150,23 @@ int main() {
 
 
     for (int count : counts) {
-        cout << "Integers:\n";
         performTestRBT(pqRBTInt, count, logger);
-        cout << "Floats:\n";
         performTestRBT(pqRBTFloat, count,logger);
-        cout << "Doubles:\n";
         performTestRBT(pqRBTDouble, count,logger);
     }
     cout<<"Testing RedBlackTree priorityQueue finished"<<endl;
 
-    ///SLL
-    cout<<"Testing SingleLinkedList SingleLinkedList"<<endl;
-    PriorityQueueSLL<int> pqSLLInt;
-    PriorityQueueSLL<float> pqSLLFloat;
-    PriorityQueueSLL<double> pqSLLDouble;
-
-    for (int count : counts) {
-        performTestSLL(pqSLLInt, count,logger);
-        performTestSLL(pqSLLFloat, count,logger);
-        performTestSLL(pqSLLDouble, count,logger);
-    }
-    cout<<"Testing SingleLinkedList SingleLinkedList finished"<<endl;
-    return 0;
+//    ///SLL
+//    cout<<"Testing SingleLinkedList SingleLinkedList"<<endl;
+//    PriorityQueueSLL<int> pqSLLInt;
+//    PriorityQueueSLL<float> pqSLLFloat;
+//    PriorityQueueSLL<double> pqSLLDouble;
+//
+//    for (int count : counts) {
+//        performTestSLL(pqSLLInt, count,logger);
+//        performTestSLL(pqSLLFloat, count,logger);
+//        performTestSLL(pqSLLDouble, count,logger);
+//    }
+//    cout<<"Testing SingleLinkedList SingleLinkedList finished"<<endl;
+//    return 0;
 }
